@@ -2,8 +2,6 @@ from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivymd.uix.screen import MDScreen
-from kivy.properties import StringProperty, NumericProperty
-from kivy.uix.screenmanager import Screen, ScreenManager
 
 from kivymd.uix.floatlayout import MDFloatLayout
 
@@ -294,10 +292,12 @@ class NavBar(MDFloatLayout):
 class NewToolBar(MDScreen):
     pass
 
+
 Builder.load_string(kv)
 
 
 if __name__ == "__main__":
+
     class BottomNavbar(MDApp):
         def build(self):
             return NewToolBar()

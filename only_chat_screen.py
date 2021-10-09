@@ -6,7 +6,6 @@ from kivy.uix.screenmanager import ScreenManager
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.label import MDLabel
 from kivy.properties import StringProperty, NumericProperty
-from kivy.core.text import LabelBase
 from functools import partial
 
 Window.size = (350, 550)
