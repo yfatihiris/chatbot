@@ -1,16 +1,17 @@
+from functools import partial
 from kivy.clock import Clock
-from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager
-from kivymd.uix.screen import MDScreen
-from kivymd.uix.label import MDLabel
 from kivy.properties import StringProperty, NumericProperty
-from functools import partial
+from kivymd.app import MDApp
+from kivymd.uix.label import MDLabel
+from kivymd.uix.screen import MDScreen
+
 
 Window.size = (350, 550)
 
-kv = """
+Builder.load_string("""
 <Command>
     size_hint_y: None
     pos_hint: {"right": .98}
@@ -139,9 +140,7 @@ kv = """
                 text_color: 1, 1, 1, 1
                 md_bg_color: rgba(15, 152, 169, 255)
                 on_release: root.send()
-"""
-
-Builder.load_string(kv)
+""")
 
 
 class Command(MDLabel):

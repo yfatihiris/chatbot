@@ -1,13 +1,12 @@
-from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
-
 from kivymd.uix.floatlayout import MDFloatLayout
 
 Window.size = (310, 580)
 
-kv = """
+Builder.load_string("""
 #:import NoTransition kivy.uix.screenmanager.NoTransition
 #:import ChatBot only_chat_screen.ChatBot
 #:import rgba kivy.utils.rgba
@@ -282,7 +281,7 @@ kv = """
             IconC:
                 images: "icons/gönder simgesi-10.png", "icons/gönder simgesi-11.png"
                 name: "search2"
-"""
+""")
 
 
 class NavBar(MDFloatLayout):
@@ -291,9 +290,6 @@ class NavBar(MDFloatLayout):
 
 class NewToolBar(MDScreen):
     pass
-
-
-Builder.load_string(kv)
 
 
 if __name__ == "__main__":

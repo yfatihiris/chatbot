@@ -1,13 +1,12 @@
+import requests
 from kivy.core.text import LabelBase
 from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty
-from kivymd.app import MDApp
-import json
-from kivymd.uix.button import MDFlatButton
-from kivymd.uix.dialog import MDDialog
-import requests
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivymd.app import MDApp
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.dialog import MDDialog
 
 Window.size = (310, 580)
 
@@ -400,14 +399,13 @@ class LoginApp(MDApp):
     email = StringProperty()
 
     def build(self):
-        self.strng = Builder.load_string(help_str)
         self.url = "https://login-96571-default-rtdb.firebaseio.com/.json"
-        return self.strng
+        return Builder.load_string(help_str)
 
     def signup(self):
-        signupEmail = self.strng.get_screen("signup").ids.signup_email.text
-        signupPassword = self.strng.get_screen("signup").ids.signup_password.text
-        signupUsername = self.strng.get_screen("signup").ids.signup_username.text
+        signupEmail = self.root.get_screen("signup").ids.signup_email.text
+        signupPassword = self.root.get_screen("signup").ids.signup_password.text
+        signupUsername = self.root.get_screen("signup").ids.signup_username.text
         if (
             signupEmail.split() == []
             or signupPassword.split() == []
@@ -435,17 +433,8 @@ class LoginApp(MDApp):
             )
             self.dialog.open()
         else:
-            print(signupEmail, signupPassword)
-            signup_info = str(
-                {
-                    f'"{signupEmail}":{{"Password":"{signupPassword}","Username":"{signupUsername}"}}'
-                }
-            )
-            signup_info = signup_info.replace(".", "-")
-            signup_info = signup_info.replace("'", "")
-            to_database = json.loads(signup_info)
-            print((to_database))
-            requests.patch(url=self.url, json=to_database)
+            signup_info = {signupEmail: {{"Password": signupPassword, "Username": signupUsername}}}
+            requests.patch(url=self.url, json=signup_info)
             self.root.current = "login"
 
     auth = "DUU5VDWxXtDmOykzuJVl36HN5sYaMKdPrd1jRXYN"
@@ -458,11 +447,8 @@ class LoginApp(MDApp):
         supported_loginPassword = loginPassword.replace(".", "-")
         request = requests.get(self.url + "?auth=" + self.auth)
         data = request.json()
-        emails = set()
-        for key, value in data.items():
-            emails.add(key)
         if (
-            supported_loginEmail in emails
+            supported_loginEmail in data
             and supported_loginPassword == data[supported_loginEmail]["Password"]
         ):
             self.email = supported_loginEmail
