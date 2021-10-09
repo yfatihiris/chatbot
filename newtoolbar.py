@@ -1,8 +1,11 @@
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.image import Image
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.floatlayout import MDFloatLayout
+from plyer import filechooser
 
 Window.size = (310, 580)
 
@@ -103,7 +106,7 @@ Builder.load_string("""
                 halign: "center"
             MDFloatLayout:
                 md_bg_color: rgba(228, 245, 247, 255)
-                Image:
+                Profile:
                     source:"images/chatbot.jpg"
                     size_hint: .6, .3
                     pos_hint: {"center_x": .5, "center_y": .75}
@@ -290,6 +293,14 @@ class NavBar(MDFloatLayout):
 
 class NewToolBar(MDScreen):
     pass
+
+
+class Profile(ButtonBehavior, Image):
+    def on_release(self):
+        filechooser.open_file(on_selection=self.profile_pic, filters=["*jpg", "*.png"])
+
+    def profile_pic(self, path):
+        self.source = path[0]
 
 
 if __name__ == "__main__":
