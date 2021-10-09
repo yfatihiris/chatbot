@@ -1,5 +1,10 @@
+from base64 import b64encode, b64decode
+import json
+from io import BytesIO
 from kivy.lang import Builder
+from kivy.clock import Clock
 from kivy.core.window import Window
+from kivy.core.image import Image as CoreImage
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivymd.app import MDApp
@@ -49,6 +54,8 @@ Builder.load_string("""
 <NewToolBar>:
     name: 'main_app'
     md_bg_color: rgba(228, 245, 247, 255)
+    on_pre_enter:
+        profile.load_profile()
     ScreenManager:
         id: scr
         transition: NoTransition()
@@ -107,7 +114,7 @@ Builder.load_string("""
             MDFloatLayout:
                 md_bg_color: rgba(228, 245, 247, 255)
                 Profile:
-                    source:"images/chatbot.jpg"
+                    id: profile
                     size_hint: .6, .3
                     pos_hint: {"center_x": .5, "center_y": .75}
                 MDLabel:
@@ -296,15 +303,39 @@ class NewToolBar(MDScreen):
 
 
 class Profile(ButtonBehavior, Image):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.app = MDApp.get_running_app()
+        try:
+            with open("../user_details.json") as f:
+                self.details = json.load(f)
+        except FileNotFoundError:
+            self.details = {}
+            with open("../user_details.json", "w") as f:
+                json.dump(self.details, f)
+
+    def load_profile(self):
+        profile_image = self.details.get(self.app.username, {}).get('profile')
+        if profile_image:
+            self.texture = CoreImage(BytesIO(b64decode(profile_image.encode())), ext='png').texture
+        else:
+            self.source = "images/chatbot.jpg"
+
     def on_release(self):
-        filechooser.open_file(on_selection=self.profile_pic, filters=["*jpg", "*.png"])
+        filechooser.open_file(on_selection=self.profile_pic, filters=["*.png"])
 
     def profile_pic(self, path):
         self.source = path[0]
+        image_bytes = BytesIO()
+        Image(source=self.source).export_as_image().save(image_bytes, fmt='png', flipped=False)
+        self.details[self.app.username] = {'profile': b64encode(image_bytes.read()).decode()}
+        # need to fix this
+        with open("../user_details.json", "w") as f:
+            print(json.dumps(self.details))
+            json.dump(self.details, f)
 
 
 if __name__ == "__main__":
-
     class BottomNavbar(MDApp):
         def build(self):
             return NewToolBar()
