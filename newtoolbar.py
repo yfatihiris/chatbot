@@ -351,14 +351,11 @@ class Profile(ButtonBehavior, Image):
             self.source = "avatar/gönder simgesi-10.png"
 
     def on_release(self):
-        ps = ProfileSelect()
-        ps.bind(on_dismiss=self.profile_pic)
-        ps.open()
+        ProfileSelect(on_dismiss=self.profile_pic).open()
 
     def profile_pic(self, inst):
-        path = inst.ids.selected.text
-        self.source = path
-        self.details[self.app.username] = {'profile': path}
+        self.source = inst.ids.selected.text
+        self.details[self.app.username] = {'profile': self.source}
         with open("../user_details.json", "w") as f:
             json.dump(self.details, f)
 
