@@ -1,16 +1,22 @@
 import json
+from random import random
 from kivy.lang import Builder
 from kivy.uix.modalview import ModalView
+from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
+from kivy.uix.widget import Widget
+from kivy.properties import ListProperty
+from kivy.graphics import Line, Color, Ellipse
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.floatlayout import MDFloatLayout
 
 Window.size = (310, 580)
 
-Builder.load_string("""
+Builder.load_string(
+    """
 #:import NoTransition kivy.uix.screenmanager.NoTransition
 #:import ChatBot only_chat_screen.ChatBot
 #:import rgba kivy.utils.rgba
@@ -132,6 +138,7 @@ Builder.load_string("""
                 ChatBot
         MDScreen:
             name: "search"
+            on_pre_enter: score.draw()
             MDLabel:
                 text: ""
                 pos_hint: {"center_y": .5}
@@ -142,11 +149,15 @@ Builder.load_string("""
                     id: profile
                     size_hint: .6, .3
                     pos_hint: {"center_x": .5, "center_y": .75}
+                Score:
+                    id: score
+                    circle_size: 100
+                    pos_hint: {"center_x": .5, "center_y": .37}
                 MDLabel:
                     text: app.username
                     font_name: "BPoppins"
                     font_size: "25sp"
-                    pos_hint: {"center_x": .5, "center_y": .52}
+                    pos_hint: {"center_x": .5, "center_y": .37}
                     halign: "center"
                     theme_text_color: "Custom"
                     text_color: rgba(15, 152, 169, 255)
@@ -154,34 +165,10 @@ Builder.load_string("""
                     text: "Fatih İriş"
                     font_name: "BPoppins"
                     font_size: "15sp"
-                    pos_hint: {"center_x": .5, "center_y": .46}
+                    pos_hint: {"center_x": .5, "center_y": .075}
                     halign: "center"
                     theme_text_color: "Custom"
                     text_color: rgba(15, 152, 169, 255)
-                MDLabel:
-                    text: "Son Skor"
-                    font_name: "BPoppins"
-                    font_size: "25sp"
-                    pos_hint: {"center_x": .5, "center_y": .35}
-                    halign: "center"
-                    theme_text_color: "Custom"
-                    text_color: rgba(15, 152, 169, 255)
-                MDFloatLayout:
-                    md_bg_color: rgba(178, 178, 178, 255)
-                    size_hint : 2, .002
-                    pos_hint: {"center_x": .3, "center_y": .3}
-                MDLabel:
-                    text: "20"
-                    font_name: "BPoppins"
-                    font_size: "15sp"
-                    pos_hint: {"center_x": .5, "center_y": .25}
-                    halign: "center"
-                    theme_text_color: "Custom"
-                    text_color: rgba(15, 152, 169, 255)
-                MDFloatLayout:
-                    md_bg_color: rgba(178, 178, 178, 255)
-                    size_hint : 2, .002
-                    pos_hint: {"center_x": .1, "center_y": .2}
         MDScreen:
             name: "home1"
             MDFloatLayout:
@@ -288,7 +275,7 @@ Builder.load_string("""
                     size: (root.width, root.height)
                     height: self.minimum_height
                     size_hint: None, None
-                    pso_hint: {'top': 10}
+                    pos_hint: {'top': 10}
                     cols: 1
                     spacing: 5
     NavBar:
@@ -316,7 +303,8 @@ Builder.load_string("""
             IconC:
                 images: "icons/gönder simgesi-10.png", "icons/gönder simgesi-11.png"
                 name: "search2"
-""")
+"""
+)
 
 
 class NavBar(MDFloatLayout):
@@ -344,7 +332,7 @@ class Profile(ButtonBehavior, Image):
                 json.dump(self.details, f)
 
     def load_profile(self):
-        profile_image = self.details.get(self.app.username, {}).get('profile')
+        profile_image = self.details.get(self.app.username, {}).get("profile")
         if profile_image:
             self.source = profile_image
         else:
@@ -355,12 +343,49 @@ class Profile(ButtonBehavior, Image):
 
     def profile_pic(self, inst):
         self.source = inst.ids.selected.text
-        self.details[self.app.username] = {'profile': self.source}
+        self.details[self.app.username] = {"profile": self.source}
         with open("../user_details.json", "w") as f:
             json.dump(self.details, f)
 
 
+class Score(Widget):
+    segments = ListProperty(
+        [
+            random(), random(), random(), random(), random(), random(), random(), random(),
+            random(), random(), random(), random(), random(), random(), random(), random()
+        ]
+    )
+
+    def draw(self, dt=None):
+        self.canvas.clear()
+        segments = 16
+        seg = 22.5
+        with self.canvas:
+            for i in range(1, segments + 1):
+                Color(1.0 / segments * i, 1, 1, mode="hsv")
+                Line(
+                    circle=[
+                        Window.width * self.pos_hint["center_x"],
+                        Window.height * self.pos_hint["center_y"],
+                        self.circle_size/2,
+                        (seg * i - 1),
+                        (seg * i + seg),
+                    ],
+                    width=self.circle_size * max(0.2, self.segments[i - 1]),
+                    cap="none",
+                )
+                Color(rgb=(0, 0, 0))
+                Ellipse(
+                    pos=(
+                        Window.width * self.pos_hint["center_x"] - self.circle_size/2,
+                        Window.height * self.pos_hint["center_y"] - self.circle_size/2,
+                    ),
+                    size=(self.circle_size, self.circle_size)
+                )
+
+
 if __name__ == "__main__":
+
     class BottomNavbar(MDApp):
         def build(self):
             return NewToolBar()
