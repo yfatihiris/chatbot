@@ -1,16 +1,12 @@
-from base64 import b64encode, b64decode
 import json
-from io import BytesIO
 from kivy.lang import Builder
-from kivy.clock import Clock
+from kivy.uix.modalview import ModalView
 from kivy.core.window import Window
-from kivy.core.image import Image as CoreImage
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.floatlayout import MDFloatLayout
-from plyer import filechooser
 
 Window.size = (310, 580)
 
@@ -18,6 +14,35 @@ Builder.load_string("""
 #:import NoTransition kivy.uix.screenmanager.NoTransition
 #:import ChatBot only_chat_screen.ChatBot
 #:import rgba kivy.utils.rgba
+
+<BImage@ButtonBehavior+Image>:
+    on_release: 
+        self.parent.select.text = self.source
+        self.parent.modal.dismiss()
+
+<ProfileSelect>:
+    id: modal
+    size_hint: .5, .5
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id: selected
+            text: ''
+            size_hint_y: .1
+        GridLayout:
+            modal: modal
+            cols: 3
+            select: selected
+            BImage:
+                source: 'avatar/gönder simgesi-10.png'
+            BImage:
+                source: 'avatar/gönder simgesi-11.png'
+            BImage:
+                source: 'avatar/gönder simgesi-12.png'
+            BImage:
+                source: 'avatar/gönder simgesi-13.png'
+            BImage:
+                source: 'avatar/gönder simgesi-14.png'
 
 <IconB@MDIconButton>:
     ripple_scale: 0
@@ -302,6 +327,10 @@ class NewToolBar(MDScreen):
     pass
 
 
+class ProfileSelect(ModalView):
+    pass
+
+
 class Profile(ButtonBehavior, Image):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -317,19 +346,19 @@ class Profile(ButtonBehavior, Image):
     def load_profile(self):
         profile_image = self.details.get(self.app.username, {}).get('profile')
         if profile_image:
-            self.texture = CoreImage(BytesIO(b64decode(profile_image.encode())), ext='png').texture
+            self.source = profile_image
         else:
-            self.source = "images/chatbot.jpg"
+            self.source = "avatar/gönder simgesi-10.png"
 
     def on_release(self):
-        filechooser.open_file(on_selection=self.profile_pic, filters=["*.png"])
+        ps = ProfileSelect()
+        ps.bind(on_dismiss=self.profile_pic)
+        ps.open()
 
-    def profile_pic(self, path):
-        self.source = path[0]
-        image_bytes = BytesIO()
-        Image(source=self.source).export_as_image().save(image_bytes, fmt='png', flipped=False)
-        self.details[self.app.username] = {'profile': b64encode(image_bytes.read()).decode()}
-        # need to fix this
+    def profile_pic(self, inst):
+        path = inst.ids.selected.text
+        self.source = path
+        self.details[self.app.username] = {'profile': path}
         with open("../user_details.json", "w") as f:
             print(json.dumps(self.details))
             json.dump(self.details, f)
