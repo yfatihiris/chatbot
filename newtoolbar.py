@@ -360,7 +360,6 @@ class Profile(ButtonBehavior, Image):
         self.source = path
         self.details[self.app.username] = {'profile': path}
         with open("../user_details.json", "w") as f:
-            print(json.dumps(self.details))
             json.dump(self.details, f)
 
 
