@@ -104,6 +104,10 @@ Builder.load_string(
         MDScreen:
             name: "giris"
             MDFloatLayout:
+                MDFloatLayout:
+                    md_bg_color: rgba(178, 178, 178, 255)
+                    size_hint : 1, .002
+                    pos_hint: {"center_x": .5, "center_y": .89}
                 MDLabel:
                     text: "Hello Sir"
                     font_name: "BPoppins"
@@ -131,20 +135,27 @@ Builder.load_string(
                     on_release:
                         scr.current = "home"
                 MDLabel:
-                    text: ""
-                    size_hint: .45, .5
-                    pos_hint: {"center_x": .5, "center_y": .1}
+                    text: "Click Bird for Practice"
+                    size_hint: .45, .15
+                    font_size: "20sp"
                     halign: "center"
+                    pos_hint: {"center_x": .5, "center_y": .3}
+                    color: rgba(135, 133, 193, 255)
                 Image:
                     source: 'images/start_icon.JPG'
+                    size_hint: .45, .5
+                    pos_hint: {"center_x": .5, "center_y": .5}
         MDScreen:
+            md_bg_color: rgba(245, 212, 39, 255)
             name: "home"
             MDLabel:
-                text: "start logo"
+                text: ""
                 pos_hint: {"center_y": .5}
                 halign: "center"
             Image:
                 source: 'images/ARKA PLAN-01.jpg'
+                size_hint: 1, 1.4
+                pos_hint: {"center_x": .5, "center_y": .5}
             ScreenManager:
                 ChatBot
         MDScreen:
@@ -173,7 +184,7 @@ Builder.load_string(
                     theme_text_color: "Custom"
                     text_color: rgba(15, 152, 169, 255)
                 MDLabel:
-                    text: "Fatih İriş"
+                    text: ""
                     font_name: "BPoppins"
                     font_size: "15sp"
                     pos_hint: {"center_x": .5, "center_y": .075}
@@ -185,49 +196,93 @@ Builder.load_string(
             MDFloatLayout:
                 MDFloatLayout:
                     MDLabel:
-                        text: "hesap"
-                        pos_hint: {"center_y": .75}
+                        text: "Settings"
+                        pos_hint: {"center_y": .83}
                         halign: "center"
                         font_name: "BPoppins"
-                        font_size: "12sp"
+                        font_size: "30sp"
+                        theme_text_color: "Custom"
+                        text_color: rgba(15, 152, 169, 255)
+                    MDLabel:
+                        text: "Username"
+                        pos_hint: {"center_y": .7}
+                        halign: "center"
+                        font_name: "BPoppins"
+                        font_size: "20sp"
                         theme_text_color: "Custom"
                         text_color: rgba(15, 152, 169, 255)
                     CustomLabel:
                         text: app.username
-                        pos_hint: {"center_y": .7}
+                        pos_hint: {"center_y": .65}
+                        font_size: "15sp"
+                        
                     CustomLabel:
                         text: ""
                         pos_hint: {"center_y": .65}
                     CustomLabel:
-                        text: "eposta"
-                        pos_hint: {"center_y": .6}
+                        text: "E-Mail"
+                        pos_hint: {"center_y": .55}
+                        font_size: "20sp"
                     CustomLabel:
                         text: app.email
-                        pos_hint: {"center_y": .55}
-                    CustomLabel:
-                        text: "ülke/bölge"
                         pos_hint: {"center_y": .5}
+                        font_size: "15sp"
+                    CustomLabel:
+                        text: "Account Type"
+                        pos_hint: {"center_y": .4}
+                        font_size: "20sp"
+                    
+                    CustomLabel:
+                        text: "Premium"
+                        pos_hint: {"center_y": .35}
+                        font_size: "15sp"
                     CustomLabel:
                         text: ""
-                        pos_hint: {"center_y": .45}
-                    CustomLabel:
-                        text: "Premium Abonelik"
-                        pos_hint: {"center_y": .4}
-                    CustomLabel:
-                        text: "Genel"
                         pos_hint: {"center_y": .35}
                     CustomLabel:    
-                        text: "Bildirimler"
-                        pos_hint: {"center_y": .3}
-                    CustomLabel:
-                        text: "arayüz dili"
+                        text: "Application Language"
                         pos_hint: {"center_y": .25}
+                        font_size: "20sp"
                     CustomLabel:
-                        text: "türkçe"
+                        text: "English"
+                        pos_hint: {"center_y": .2}
+                        font_size: "15sp"
+                    CustomLabel:
+                        text: ""
                         pos_hint: {"center_y": .2}
                     CustomLabel:
-                        text: "hakkımızda"
-                        pos_hint: {"center_y": .15}
+                        text: "About Us"
+                        pos_hint: {"center_y": .1}
+                        font_size: "20sp"
+                    MDTextButton
+                        text: ""
+                        size_hint: .15, .15
+                        pos_hint: {"center_x": .5, "center_y": .1}
+                        background_color: 0,0,0,0
+                        on_release:
+                            scr.current = "about"
+        
+        MDScreen:
+            name: "about"
+            MDFloatLayout:
+                MDFloatLayout:
+                    MDLabel:
+                        text: "names"
+                        pos_hint: {"center_y": .83}
+                        halign: "center"
+                        font_name: "BPoppins"
+                        font_size: "30sp"
+                        theme_text_color: "Custom"
+                        text_color: rgba(15, 152, 169, 255)
+                    MDIconButton:
+                        icon: "arrow-left"
+                        pos_hint: {"center_y": .83}
+                        user_font_size: "30sp"
+                        theme_text_color: "Custom"
+                        text_color: rgba(15, 152, 169, 255)
+                        on_release:
+                            scr.current = "home1"
+        
         MDScreen:
             name: "search1"
             md_bg_color: rgba(15, 152, 169, 255)
@@ -248,14 +303,14 @@ Builder.load_string(
                     cols: 1
                     spacing: 5
                     MDLabel:
-                        text: "Hello Sir Notification"
+                        text: "Notification 1 will be here"
                         font_name: "BPoppins"
-                        font_size: "35sp"
+                        font_size: "27sp"
                         size_hint: .8, None
                         halign: "center"
                         theme_text_color: "Custom"
                         text_color: rgba(15, 152, 169, 255)
-                        pos_hint: {"center_x": .5, "center_y": .75}
+                        pos_hint: {"center_x": .5, "center_y": .82}
                         canvas.before:
                             Color:
                                 rgb: rgba(228, 245, 247, 1)
@@ -263,6 +318,24 @@ Builder.load_string(
                                 size: self.size
                                 pos: self.pos
                                 radius: [23, 23, 23, 23]
+                                
+                    MDLabel:
+                        text: "Notification 2 will be here"
+                        font_name: "BPoppins"
+                        font_size: "27sp"
+                        size_hint: .8, None
+                        halign: "center"
+                        theme_text_color: "Custom"
+                        text_color: rgba(15, 152, 169, 255)
+                        pos_hint: {"center_x": .5, "center_y": .73}
+                        canvas.before:
+                            Color:
+                                rgb: rgba(228, 245, 247, 1)
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+                                radius: [23, 23, 23, 23]
+                    
                     Button:
                         size_hint_y: None
                         
@@ -271,10 +344,13 @@ Builder.load_string(
                     Button:
                         size_hint_y: None
         MDScreen:
+            md_bg_color: rgba(245, 212, 39, 255)
             name: "search2"
             error_box: error_box
             Image:
                 source: 'images/ARKA PLAN-01.jpg'
+                size_hint: 1, 1.4
+                pos_hint: {"center_x": .5, "center_y": .5}
             ScrollView:
                 size_hint_y: .77
                 pos_hint: {"x": 0, "y": .116}
