@@ -1,13 +1,14 @@
 import json
+from math import cos, sin, radians
 from random import random
 from kivy.lang import Builder
 from kivy.uix.modalview import ModalView
-from kivy.clock import Clock
+from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, NumericProperty
 from kivy.graphics import Line, Color, Ellipse
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
@@ -81,6 +82,16 @@ Builder.load_string(
     font_size: "12sp"
     theme_text_color: "Custom"
     text_color: rgba(15, 152, 169, 255)
+
+<CircleLabel>:
+    canvas.before:
+        PushMatrix
+        Rotate:
+            angle: self.angle
+            axis: 0, 0, 1
+            origin: self.center
+    canvas.after:
+        PopMatrix
 
 <NewToolBar>:
     name: 'main_app'
@@ -307,6 +318,12 @@ Builder.load_string(
 )
 
 
+class CircleLabel(Label):
+    angle = NumericProperty(0)
+    origin = ListProperty([])
+    font_size = 16
+
+
 class NavBar(MDFloatLayout):
     pass
 
@@ -358,6 +375,7 @@ class Score(Widget):
 
     def draw(self, dt=None):
         self.canvas.clear()
+        self.clear_widgets()
         segments = 16
         seg = 22.5
         with self.canvas:
@@ -382,6 +400,21 @@ class Score(Widget):
                     ),
                     size=(self.circle_size, self.circle_size)
                 )
+        self.labels()
+
+    def labels(self):
+        for i in range(16):
+            mid = i * 22.5 + 90 - 11.25
+            self.add_widget(CircleLabel(color=(1, .5, .75, 1),
+                                        text=f'{int(self.segments[-(i+1)]*100)}',
+                                        center=(
+                     cos(radians(mid)) * Window.width * min(.9, max(.5, self.segments[-(i+1)])) * self.pos_hint['center_x'] +
+                     Window.width * self.pos_hint['center_x'],
+                     sin(radians(mid)) * Window.height * min(.9, max(.5, self.segments[-(i+1)])) * self.pos_hint['center_y'] +
+                     Window.height * self.pos_hint['center_y']),
+                                        angle=mid+270
+                                       )
+                            )
 
 
 if __name__ == "__main__":
