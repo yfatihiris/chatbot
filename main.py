@@ -410,16 +410,22 @@ class LoginApp(MDApp):
         self.url = "https://login-96571-default-rtdb.firebaseio.com/.json"
         initialize_fb(self.oauth_passed, self.oauth_failed)
         initialize_google(self.oauth_passed, self.oauth_failed)
-        initialize_twitter(self.oauth_passed, self.oauth_failed)
+        try:
+            initialize_twitter(self.oauth_passed, self.oauth_failed)
+        except NotImplementedError as e:
+            print('Twitter login unavailable')
         return Builder.load_string(help_str)
 
     def on_start(self):
-        if auto_login(login_providers.google):
-            self.current_provider = login_providers.google
-        elif auto_login(login_providers.facebook):
-            self.current_provider = login_providers.facebook
-        elif auto_login(login_providers.twitter):
-            self.current_provider = login_providers.twitter
+        try:
+            if auto_login(login_providers.google):
+                self.current_provider = login_providers.google
+            elif auto_login(login_providers.facebook):
+                self.current_provider = login_providers.facebook
+            elif auto_login(login_providers.twitter):
+                self.current_provider = login_providers.twitter
+        except NotImplementedError as e:
+            print(e)
 
     def signup(self):
         signupEmail = self.root.get_screen("signup").ids.signup_email.text
@@ -509,6 +515,7 @@ class LoginApp(MDApp):
 
     def oauth_failed(self):
         pass
+
 
 if __name__ == "__main__":
     LabelBase.register(name="Poppins", fn_regular="fonts/Poppins-Regular.ttf")
