@@ -7,11 +7,19 @@ from kivy.core.window import Window
 from kivymd.app import MDApp
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
-
+from kivyauth.utils import auto_login, login_providers
+from kivyauth.facebook_auth import login_facebook, initialize_fb
+from kivyauth.google_auth import login_google, initialize_google
+from kivyauth.twitter_auth import login_twitter, initialize_twitter
 Window.size = (310, 580)
 
 help_str = """
 #:import NewToolBar newtoolbar.NewToolBar
+
+<ImageB@ButtonBehavior+Image>:
+    on_release: 
+        app.oauth_login(self.source)
+
 ScreenManager:
     MainScreen:
     LoginScreen:
@@ -196,13 +204,13 @@ ScreenManager:
         cols: 3
         size_hint: .48, .07
         pos_hint: {"center_x": .5, "center_y": .1}
-        Image:
+        ImageB:
             source: "images/google.png"
             mipmap: True 
-        Image:
+        ImageB:
             source: "images/facebook.png"
             mipmap: True
-        Image:
+        ImageB:
             source: "images/apple.png"
             mipmap: True
     MDLabel:
@@ -400,7 +408,18 @@ class LoginApp(MDApp):
 
     def build(self):
         self.url = "https://login-96571-default-rtdb.firebaseio.com/.json"
+        initialize_fb(self.oauth_passed, self.oauth_failed)
+        initialize_google(self.oauth_passed, self.oauth_failed)
+        initialize_twitter(self.oauth_passed, self.oauth_failed)
         return Builder.load_string(help_str)
+
+    def on_start(self):
+        if auto_login(login_providers.google):
+            self.current_provider = login_providers.google
+        elif auto_login(login_providers.facebook):
+            self.current_provider = login_providers.facebook
+        elif auto_login(login_providers.twitter):
+            self.current_provider = login_providers.twitter
 
     def signup(self):
         signupEmail = self.root.get_screen("signup").ids.signup_email.text
@@ -433,7 +452,9 @@ class LoginApp(MDApp):
             )
             self.dialog.open()
         else:
-            signup_info = {signupEmail: {{"Password": signupPassword, "Username": signupUsername}}}
+            signup_info = {
+                signupEmail: {{"Password": signupPassword, "Username": signupUsername}}
+            }
             requests.patch(url=self.url, json=signup_info)
             self.root.current = "login"
 
@@ -477,6 +498,17 @@ class LoginApp(MDApp):
                 "accept"
             ).ids.username_info.text = f"welcome {self.username}"
 
+    def oauth_login(self, social):
+        socials = {'facebook': login_facebook, 'google': login_google, 'twitter': login_twitter}
+        for s in socials:
+            if s in social:
+                socials[s]()
+
+    def oauth_passed(self, name, email, profile):
+        pass
+
+    def oauth_failed(self):
+        pass
 
 if __name__ == "__main__":
     LabelBase.register(name="Poppins", fn_regular="fonts/Poppins-Regular.ttf")
