@@ -14,10 +14,9 @@ from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.floatlayout import MDFloatLayout
 
-Window.size = (310, 580)
 
 Builder.load_string(
-    """
+"""
 #:import NoTransition kivy.uix.screenmanager.NoTransition
 #:import ChatBot only_chat_screen.ChatBot
 #:import rgba kivy.utils.rgba
@@ -51,16 +50,6 @@ Builder.load_string(
             BImage:
                 source: 'avatar/gönder simgesi-14.png'
 
-<IconB@MDIconButton>:
-    ripple_scale: 0
-    user_font_size: "30sp"
-    theme_text_color: "Custom"
-    active: self.parent.active == self if self.parent else False
-    text_color: rgba(90, 14, 5, 255) if self.active else rgba(240, 103, 86, 255)
-    
-    on_release:
-        self.parent.active = self
-        app.root.get_screen('main_app').ids.scr.current = self.name
 
 <IconC@ButtonBehavior+Image>
     images: '', ''
@@ -397,7 +386,7 @@ Builder.load_string(
 class CircleLabel(Label):
     angle = NumericProperty(0)
     origin = ListProperty([])
-    font_size = 16
+    font_size = 22
 
 
 class NavBar(MDFloatLayout):

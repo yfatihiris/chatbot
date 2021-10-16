@@ -9,8 +9,6 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.screen import MDScreen
 
 
-Window.size = (350, 550)
-
 Builder.load_string("""
 <Command>
     size_hint_y: None
