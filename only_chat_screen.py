@@ -21,6 +21,12 @@ Builder.load_string("""
     cross: False
     canvas.before:
         Color:
+            rgb: rgba(100, 100, 100, 255)
+        RoundedRectangle:
+            size: self.width + 4, self.height + 4
+            pos: self.x - 2, self.y - 2
+            radius: [23, 23, 23, 23]
+        Color:
             rgb: rgba(228, 245, 247, 255)
         RoundedRectangle:
             size: self.width, self.height
