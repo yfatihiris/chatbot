@@ -10,6 +10,7 @@ from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 from kivy.properties import ListProperty, NumericProperty
 from kivy.graphics import Color, Ellipse
+from kivy.utils import rgba
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.floatlayout import MDFloatLayout
@@ -426,6 +427,7 @@ class Score(Widget):
     segments = ListProperty()
     scale = .85
     font_size = 10
+    colours = {.75: (93, 181, 204), .5: (88, 128, 84), .4: (251, 175, 67), 0: (238, 43, 36)}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -443,10 +445,11 @@ class Score(Widget):
             with self.canvas.before:
                 start = i * 22.5
                 end = (i+1) * 22.5
-                Color(.1, .6, 1.0 / 16 * sorted(values).index(values[i]))
-
-                # Color(1.0 / 16 * i, 1, 1, mode="hsv")
-                # Color(1.0 / 16 * sorted(values).index(values[i]), 1, 1, mode="hsv")
+                for value, colour in self.colours.items():
+                    if self.segments[i] > value:
+                        segment_colour = rgba(colour)
+                        break
+                Color(*segment_colour)
                 w = width * (self.segments[i] + .2)
                 h = height * (self.segments[i] + .2)
                 Ellipse(size=(w, h), pos=(
