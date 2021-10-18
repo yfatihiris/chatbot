@@ -15,15 +15,14 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.floatlayout import MDFloatLayout
 
 
-Builder.load_string(
-"""
+Builder.load_string("""
 #:import NoTransition kivy.uix.screenmanager.NoTransition
 #:import ChatBot only_chat_screen.ChatBot
 #:import rgba kivy.utils.rgba
 
 <ScoreTest@ButtonBehavior+MDLabel>
 <BImage@ButtonBehavior+Image>:
-    on_release: 
+    on_release:
         self.parent.select.text = self.source
         self.parent.modal.dismiss()
 
@@ -59,9 +58,7 @@ Builder.load_string(
     size_hint: None, None
     pos_hint: {"center_x": .525, "center_y": .5}
     mipmap: True
-    
     size: dp(42), dp(42)
-    
     on_release:
         self.parent.active = self
         app.root.get_screen('main_app').ids.scr.current = self.name
@@ -112,7 +109,7 @@ Builder.load_string(
                     pos_hint: {"center_x": .5, "center_y": .5}
                     canvas:
                         Color:
-                            rgba: rgba(1, 170, 23, 255)        
+                            rgba: rgba(1, 170, 23, 255)
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -170,7 +167,7 @@ Builder.load_string(
                     font_name: "BPoppins"
                     font_size: "25sp"
                     pos_hint: {"center_x": .5, "center_y": .33}
-                    size_hint_y: .1 
+                    size_hint_y: .1
                     halign: "center"
                     theme_text_color: "Custom"
                     text_color: rgba(15, 152, 169, 255)
@@ -207,7 +204,6 @@ Builder.load_string(
                         text: app.username
                         pos_hint: {"center_y": .65}
                         font_size: "15sp"
-                        
                     CustomLabel:
                         text: ""
                         pos_hint: {"center_y": .65}
@@ -223,7 +219,6 @@ Builder.load_string(
                         text: "Account Type"
                         pos_hint: {"center_y": .4}
                         font_size: "20sp"
-                    
                     CustomLabel:
                         text: "Premium"
                         pos_hint: {"center_y": .35}
@@ -231,7 +226,7 @@ Builder.load_string(
                     CustomLabel:
                         text: ""
                         pos_hint: {"center_y": .35}
-                    CustomLabel:    
+                    CustomLabel:
                         text: "Application Language"
                         pos_hint: {"center_y": .25}
                         font_size: "20sp"
@@ -253,7 +248,6 @@ Builder.load_string(
                         background_color: 0,0,0,0
                         on_release:
                             scr.current = "about"
-        
         MDScreen:
             name: "about"
             MDFloatLayout:
@@ -274,7 +268,6 @@ Builder.load_string(
                         text_color: rgba(15, 152, 169, 255)
                         on_release:
                             scr.current = "home1"
-        
         MDScreen:
             name: "search1"
             md_bg_color: rgba(15, 152, 169, 255)
@@ -310,7 +303,6 @@ Builder.load_string(
                                 size: self.size
                                 pos: self.pos
                                 radius: [23, 23, 23, 23]
-                                
                     MDLabel:
                         text: "Notification 2 will be here"
                         font_name: "BPoppins"
@@ -327,10 +319,8 @@ Builder.load_string(
                                 size: self.size
                                 pos: self.pos
                                 radius: [23, 23, 23, 23]
-                    
                     Button:
                         size_hint_y: None
-                        
                     Button:
                         size_hint_y: None
                     Button:
@@ -382,8 +372,7 @@ Builder.load_string(
             IconC:
                 images: "icons/gönder simgesi-10.png", "icons/gönder simgesi-11.png"
                 name: "search2"
-"""
-)
+""")
 
 
 class CircleLabel(Label):
@@ -455,6 +444,7 @@ class Score(Widget):
                 start = i * 22.5
                 end = (i+1) * 22.5
                 Color(.1, .6, 1.0 / 16 * sorted(values).index(values[i]))
+
                 # Color(1.0 / 16 * i, 1, 1, mode="hsv")
                 # Color(1.0 / 16 * sorted(values).index(values[i]), 1, 1, mode="hsv")
                 w = width * (self.segments[i] + .2)

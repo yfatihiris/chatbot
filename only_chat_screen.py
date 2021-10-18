@@ -1,7 +1,6 @@
 from functools import partial
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager
 from kivy.properties import StringProperty, NumericProperty
 from kivymd.app import MDApp
@@ -20,7 +19,6 @@ Builder.load_string("""
     join: True
     join_left: True
     cross: False
-    
     canvas.before:
         Color:
             rgb: rgba(228, 245, 247, 255)
@@ -28,7 +26,6 @@ Builder.load_string("""
             size: self.width, self.height
             pos: self.pos
             radius: [23, 23, 23, 23]
-            
         Color:
             rgba: rgba(228, 245, 247, (self.join or 0) * 255)
         Rectangle:
@@ -39,7 +36,6 @@ Builder.load_string("""
             size: self.width * .15, self.width * .15
             angle_start: 90
             angle_end: 270
-    
     canvas.after:
         Color:
             rgba: 1, 1, 1, ((self.cross or 0) * .75)
@@ -47,7 +43,6 @@ Builder.load_string("""
             pos: (self.right - self.width*.2, self.y + (self.height - self.width*.2) * .5)
             size: self.width*.2, self.width*.2
             source: 'icons/gönder simgesi-11.png'
-            
     on_touch_down:
         root.parent.remove_widget(self) if self.cross and self.collide_point(*args[1].pos) \
         and args[1].x > (self.right - self.width*.2) else ''
@@ -164,7 +159,7 @@ class ChatBot(MDScreen):
     def response(self, value, *args):
         response_string = ""
         if value.lower() == "hello":
-            response_string = f"Hello. I am Your Personal Assistant."
+            response_string = "Hello. I am Your Personal Assistant."
         elif value.lower() == "how are you?":
             response_string = "I'm doing well. Thanks!"
         if response_string:

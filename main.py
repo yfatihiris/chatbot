@@ -17,7 +17,7 @@ help_str = """
 #:import NewToolBar newtoolbar.NewToolBar
 
 <ImageB@ButtonBehavior+Image>:
-    on_release: 
+    on_release:
         app.oauth_login(self.source)
 
 ScreenManager:
@@ -49,7 +49,7 @@ ScreenManager:
             text: "Best place to practice English"
             font_name: "MPoppins"
             font_size: "13sp"
-            size_hint_x: .85 
+            size_hint_x: .85
             pos_hint: {"center_x": .5, "center_y": .3}
             halign: "center"
             color: rgba(127, 127, 127, 255)
@@ -61,15 +61,14 @@ ScreenManager:
             font_name: "BPoppins"
             on_release:
                 root.manager.transition.direction = "left"
-                root.manager.current = "login"  
+                root.manager.current = "login"
             canvas.before:
                 Color:
                     rgb: rgba(15, 152, 169, 255)
                 RoundedRectangle:
                     size: self.size
                     pos: self.pos
-                    radius: [5]  
-            #color: rgba(127, 127, 127, 255)        
+                    radius: [5]
         Button:
             text: "SIGNUP"
             size_hint: .66, .065
@@ -79,13 +78,13 @@ ScreenManager:
             color: rgba(15, 152, 169, 255)
             on_release:
                 root.manager.transition.direction = "left"
-                root.manager.current = "signup"  
+                root.manager.current = "signup"
             canvas.before:
                 Color:
                     rgb: rgba(15, 152, 169, 255)
                 Line:
                     width: 1.2
-                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100   
+                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
 <LoginScreen>:
     name: "login"
     MDFloatLayout:
@@ -104,13 +103,13 @@ ScreenManager:
         font_name: "BPoppins"
         font_size: "26sp"
         pos_hint: {"center_x": .6, "center_y": .85}
-        color: rgba(15, 152, 169, 255)     
+        color: rgba(15, 152, 169, 255)
     MDLabel:
         text: "Sign in to continue"
         font_name: "MPoppins"
         font_size: "18sp"
         pos_hint: {"center_x": .6, "center_y": .79}
-        color: rgba(135, 133, 193, 255)  
+        color: rgba(135, 133, 193, 255)
     MDFloatLayout:
         size_hint: .7, .07
         pos_hint: {"center_x": .5, "center_y": .63}
@@ -155,7 +154,7 @@ ScreenManager:
         MDFloatLayout:
             pos_hint: {"center_x": .45, "center_y": 0}
             size_hint_y: .03
-            md_bg_color: rgba(178,178,178,255)   
+            md_bg_color: rgba(178,178,178,255)
     Button:
         text: "LOGIN"
         size_hint: .66, .065
@@ -168,7 +167,7 @@ ScreenManager:
             RoundedRectangle:
                 size: self.size
                 pos: self.pos
-                radius: [5] 
+                radius: [5]
         on_press:
             app.login(login_email.text, login_password.text)
             app.username_changer
@@ -188,25 +187,25 @@ ScreenManager:
     MDFloatLayout:
         md_bg_color: rgba(178, 178, 178, 255)
         size_hint : .3, .002
-        pos_hint: {"center_x": .3, "center_y": .218} 
+        pos_hint: {"center_x": .3, "center_y": .218}
     MDFloatLayout:
         md_bg_color: rgba(178, 178, 178, 255)
         size_hint : .3, .002
-        pos_hint: {"center_x": .7, "center_y": .218}        
+        pos_hint: {"center_x": .7, "center_y": .218}
     MDLabel:
-        text: "Social Media Login"      
+        text: "Social Media Login"
         font_name: "BPoppins"
         font_size: "13sp"
         halign: "center"
         pos_hint: {"center_y": .16}
-        color: rgba(135, 133, 193, 255)      
+        color: rgba(135, 133, 193, 255)
     MDGridLayout:
         cols: 3
         size_hint: .48, .07
         pos_hint: {"center_x": .5, "center_y": .1}
         ImageB:
             source: "images/google.png"
-            mipmap: True 
+            mipmap: True
         ImageB:
             source: "images/facebook.png"
             mipmap: True
@@ -218,17 +217,16 @@ ScreenManager:
         font_name: "BPoppins"
         font_size: "11sp"
         pos_hint: {"center_x": .68, "center_y": .04}
-        color: rgba(135, 133, 193, 255)  
+        color: rgba(135, 133, 193, 255)
     MDTextButton:
         text: "Sign up"
         font_name: "BPoppins"
         font_size: "11sp"
         pos_hint: {"center_x": .75, "center_y": .04}
-        color: rgba(15, 152, 169, 255)   
+        color: rgba(15, 152, 169, 255)
         on_release:
             root.manager.transition.direction = "left"
-            root.manager.current = "signup"     
-                                                 
+            root.manager.current = "signup"                                                 
 <SignupScreen>:
     name: "signup"
     MDFloatLayout:
@@ -247,13 +245,13 @@ ScreenManager:
         font_name: "BPoppins"
         font_size: "26sp"
         pos_hint: {"center_x": .6, "center_y": .85}
-        color: rgba(15, 152, 169, 255)     
+        color: rgba(15, 152, 169, 255)
     MDLabel:
         text: "Create a new account"
         font_name: "MPoppins"
         font_size: "18sp"
         pos_hint: {"center_x": .6, "center_y": .79}
-        color: rgba(135, 133, 193, 255)  
+        color: rgba(135, 133, 193, 255)
     MDFloatLayout:
         size_hint: .7, .07
         pos_hint: {"center_x": .5, "center_y": .68}
@@ -294,11 +292,10 @@ ScreenManager:
             helper_text:'Required'
             helper_text_mode:  'on_error'
             required: True
-            
         MDFloatLayout:
             pos_hint: {"center_x": .45, "center_y": 0}
             size_hint_y: .03
-            md_bg_color: rgba(178,178,178,255)  
+            md_bg_color: rgba(178,178,178,255)
     MDFloatLayout:
         size_hint: .7, .07
         pos_hint: {"center_x": .5, "center_y": .44}
@@ -334,7 +331,7 @@ ScreenManager:
             RoundedRectangle:
                 size: self.size
                 pos: self.pos
-                radius: [5] 
+                radius: [5]
         on_press: app.signup()
     MDLabel:
         text: "or"
@@ -346,24 +343,24 @@ ScreenManager:
     MDFloatLayout:
         md_bg_color: rgba(178, 178, 178, 255)
         size_hint : .3, .002
-        pos_hint: {"center_x": .3, "center_y": .218} 
+        pos_hint: {"center_x": .3, "center_y": .218}
     MDFloatLayout:
         md_bg_color: rgba(178, 178, 178, 255)
         size_hint : .3, .002
-        pos_hint: {"center_x": .7, "center_y": .218}        
+        pos_hint: {"center_x": .7, "center_y": .218}
     MDLabel:
-        text: "Social Media Login"      
+        text: "Social Media Login"
         font_name: "BPoppins"
         font_size: "13sp"
         halign: "center"
         pos_hint: {"center_y": .16}
-        color: rgba(135, 133, 193, 255)      
+        color: rgba(135, 133, 193, 255)
     MDGridLayout:
         cols: 3
         size_hint: .48, .07
         pos_hint: {"center_x": .5, "center_y": .1}
         Image:
-            source: "images/google.png" 
+            source: "images/google.png"
         Image:
             source: "images/facebook.png"
         Image:
@@ -373,13 +370,13 @@ ScreenManager:
         font_name: "BPoppins"
         font_size: "11sp"
         pos_hint: {"center_x": .68, "center_y": .04}
-        color: rgba(135, 133, 193, 255)  
+        color: rgba(135, 133, 193, 255)
     MDTextButton:
         text: "Sign in"
         font_name: "BPoppins"
         font_size: "11sp"
         pos_hint: {"center_x": .79, "center_y": .04}
-        color: rgba(15, 152, 169, 255)   
+        color: rgba(15, 152, 169, 255)
         on_release:
             root.manager.transition.direction = "left"
             root.manager.current = "login"
