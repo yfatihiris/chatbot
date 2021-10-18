@@ -1,5 +1,5 @@
 import json
-from math import cos, sin, radians
+from math import cos, sin, degrees, radians
 from random import random
 from kivy.lang import Builder
 from kivy.uix.modalview import ModalView
@@ -9,7 +9,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 from kivy.properties import ListProperty, NumericProperty
-from kivy.graphics import Line, Color, Ellipse
+from kivy.graphics import Color, Ellipse
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.floatlayout import MDFloatLayout
@@ -21,6 +21,7 @@ Builder.load_string(
 #:import ChatBot only_chat_screen.ChatBot
 #:import rgba kivy.utils.rgba
 
+<ScoreTest@ButtonBehavior+MDLabel>
 <BImage@ButtonBehavior+Image>:
     on_release: 
         self.parent.select.text = self.source
@@ -149,7 +150,7 @@ Builder.load_string(
                 ChatBot
         MDScreen:
             name: "search"
-            on_pre_enter: score.draw()
+            on_pre_enter: score.test()
             MDLabel:
                 text: ""
                 pos_hint: {"center_y": .5}
@@ -163,15 +164,17 @@ Builder.load_string(
                 Score:
                     id: score
                     circle_size: 100
-                    pos_hint: {"center_x": .5, "center_y": .37}
-                MDLabel:
+                    pos_hint: {"center_x": .5, "center_y": .33}
+                ScoreTest:
                     text: app.username
                     font_name: "BPoppins"
                     font_size: "25sp"
-                    pos_hint: {"center_x": .5, "center_y": .37}
+                    pos_hint: {"center_x": .5, "center_y": .33}
+                    size_hint_y: .1 
                     halign: "center"
                     theme_text_color: "Custom"
                     text_color: rgba(15, 152, 169, 255)
+                    on_release: score.test()
                 MDLabel:
                     text: ""
                     font_name: "BPoppins"
@@ -386,7 +389,7 @@ Builder.load_string(
 class CircleLabel(Label):
     angle = NumericProperty(0)
     origin = ListProperty([])
-    font_size = 22
+    font_size = NumericProperty(15)
 
 
 class NavBar(MDFloatLayout):
@@ -431,55 +434,86 @@ class Profile(ButtonBehavior, Image):
 
 
 class Score(Widget):
-    segments = ListProperty(
-        [
-            random(), random(), random(), random(), random(), random(), random(), random(),
-            random(), random(), random(), random(), random(), random(), random(), random()
-        ]
-    )
+    segments = ListProperty()
+    scale = .85
+    font_size = 10
 
-    def draw(self, dt=None):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.pos_hint = {'center_x': .5, 'center_y': .5}
+        self.size = Window.width * self.scale, Window.width * self.scale
+        Window.bind(on_resize=self.resized)
+
+    def on_segments(self, inst, values):
         self.canvas.clear()
         self.clear_widgets()
-        segments = 16
-        seg = 22.5
-        with self.canvas:
-            for i in range(1, segments + 1):
-                Color(1.0 / segments * i, 1, 1, mode="hsv")
-                Line(
-                    circle=[
-                        Window.width * self.pos_hint["center_x"],
-                        Window.height * self.pos_hint["center_y"],
-                        self.circle_size/2,
-                        (seg * i - 1),
-                        (seg * i + seg),
-                    ],
-                    width=self.circle_size * max(0.2, self.segments[i - 1]),
-                    cap="none",
-                )
-                Color(rgb=(0, 0, 0))
-                Ellipse(
-                    pos=(
-                        Window.width * self.pos_hint["center_x"] - self.circle_size/2,
-                        Window.height * self.pos_hint["center_y"] - self.circle_size/2,
-                    ),
-                    size=(self.circle_size, self.circle_size)
-                )
-        self.labels()
-
-    def labels(self):
+        self.canvas.before.remove_group('wheel')
+        self.circles()
+        width = height = Window.width * self.scale
         for i in range(16):
-            mid = i * 22.5 + 90 - 11.25
-            self.add_widget(CircleLabel(color=(1, .5, .75, 1),
-                                        text=f'{int(self.segments[-(i+1)]*100)}',
-                                        center=(
-                     cos(radians(mid)) * Window.width * min(.9, max(.5, self.segments[-(i+1)])) * self.pos_hint['center_x'] +
-                     Window.width * self.pos_hint['center_x'],
-                     sin(radians(mid)) * Window.height * min(.9, max(.5, self.segments[-(i+1)])) * self.pos_hint['center_y'] +
-                     Window.height * self.pos_hint['center_y']),
-                                        angle=mid+270
-                                       )
+            with self.canvas.before:
+                start = i * 22.5
+                end = (i+1) * 22.5
+                Color(.1, .6, 1.0 / 16 * sorted(values).index(values[i]))
+                # Color(1.0 / 16 * i, 1, 1, mode="hsv")
+                # Color(1.0 / 16 * sorted(values).index(values[i]), 1, 1, mode="hsv")
+                w = width * (self.segments[i] + .2)
+                h = height * (self.segments[i] + .2)
+                Ellipse(size=(w, h), pos=(
+                        Window.width * self.pos_hint['center_x'] - width * (values[i] + .2) / 2,
+                        Window.height * self.pos_hint['center_y'] - height * (values[i] + .2) / 2),
+                        angle_start=start+.5, angle_end=end-.5, group='wheel')
+            move, mid = int(values[i]*100), radians(-((end + start) / 2 - 90))
+            font_size = self.font_size * self.scale
+            text = str(move)
+            self.add_widget(
+                CircleLabel(color=(.2, .3, .7),
+                            text=text, font_size=f"{font_size * 3 * self.scale}sp",
+                            center=(
+                                    cos(mid) * width * .45 * min(1.2, move/100 + .4) +
+                                    Window.width * self.pos_hint['center_x'],
+                                    sin(mid) * height * .45 * min(1.2, move/100 + .4) +
+                                    Window.height * self.pos_hint['center_y']
+                                    ),
+                            angle=(degrees(mid) + 270)
                             )
+                            )
+
+    def circles(self, dt=None):
+        self.canvas.after.clear()
+        self.canvas.before.clear()
+        with self.canvas.after:
+            Color(0, 0, 0, .5)
+            Ellipse(group='black', pos=(
+             Window.width * self.pos_hint['center_x'] - Window.width * 0.15 * self.scale,
+             Window.height * self.pos_hint['center_y'] - Window.width * 0.15 * self.scale),
+              size=(
+             Window.width * 0.3 * self.scale, Window.width * 0.3 * self.scale))
+        with self.canvas.before:
+            Color(0, 0, 0, .2)
+            Ellipse(group='black', pos=(
+             Window.width * self.pos_hint['center_x'] - Window.width * 0.25 * self.scale,
+             Window.height * self.pos_hint['center_y'] - Window.width * 0.25 * self.scale),
+              size=(
+             Window.width * 0.5 * self.scale, Window.width * 0.5 * self.scale))
+            Color(0, 0, 0, .1)
+            Ellipse(group='black', pos=(
+                Window.width * self.pos_hint['center_x'] - Window.width * 0.4 * self.scale,
+                Window.height * self.pos_hint['center_y'] - Window.width * 0.4 * self.scale),
+                    size=(
+                        Window.width * 0.8 * self.scale, Window.width * 0.8 * self.scale))
+            Color(0, 0, 0, .05)
+            Ellipse(group='black', pos=(
+                Window.width * self.pos_hint['center_x'] - Window.width * 0.5 * self.scale,
+                Window.height * self.pos_hint['center_y'] - Window.width * 0.5 * self.scale),
+                    size=(
+                        Window.width * self.scale, Window.width * self.scale))
+
+    def resized(self, *args):
+        self.on_segments(self, self.segments)
+
+    def test(self, dt=None):
+        self.segments = [random() for _ in range(16)]
 
 
 if __name__ == "__main__":
